@@ -75,6 +75,8 @@ defmodule EdenTest do
              value: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
            }
 
+    assert decode!(~s{#date "2019-12-31"}) == ~D[2019-12-31]
+
     assert decode!("#custom/tag (1 2 3)") == %Tag{name: "custom/tag", value: [1, 2, 3]}
     handlers = %{"custom/tag" => &custom_tag_handler/1}
     assert decode!("#custom/tag (1 2 3)", handlers: handlers) == [:a, :b, :c]
@@ -129,6 +131,10 @@ defmodule EdenTest do
     assert encode!(date) == "#inst \"1985-04-12T23:20:50.52Z\""
     uuid = UUID.new("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     assert encode!(uuid) == "#uuid \"f81d4fae-7dec-11d0-a765-00a0c91e6bf6\""
+
+    date = ~D[2019-12-31]
+    assert encode!(date) == "#date \"2019-12-31\""
+
 
     some_tag = Tag.new("custom/tag", :joni)
     assert encode!(some_tag) == "#custom/tag :joni"

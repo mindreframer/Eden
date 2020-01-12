@@ -22,8 +22,15 @@ defmodule Eden.Tag do
   def new(name, value), do: %Eden.Tag{name: name, value: value}
 
   def inst(datetime) do
-    {:ok, datetime, _} = DateTime.from_iso8601(datetime)
-    datetime
+    with {:ok, datetime, _} <- DateTime.from_iso8601(datetime) do
+      datetime
+    end
+  end
+
+  def date(datevalue) do
+    with {:ok, date} <- Date.from_iso8601!(datevalue) do
+      date
+    end
   end
 
   def uuid(value), do: %Eden.UUID{value: value}

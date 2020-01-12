@@ -116,6 +116,13 @@ defimpl Encode, for: DateTime do
   end
 end
 
+defimpl Encode, for: Date do
+  def encode(date) do
+    value = Date.to_iso8601(date)
+    Encode.encode(Tag.new("date", value))
+  end
+end
+
 defimpl Encode, for: Any do
   def encode(struct) when is_map(struct) do
     Encode.encode(Map.from_struct(struct))

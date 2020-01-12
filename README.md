@@ -69,9 +69,10 @@ iex> Eden.decode("nil true false .")
 | `list`  | `List`  |
 | `vector`  | `Array`  |
 | `map`  | `Map` |
-| `set`  | `HashSet` |
+| `set`  | `MapSet` |
 | `#inst`  | `Elixir.DateTime` |
 | `#uuid`  | `Eden.UUID` |
+| `#date`  | `Elixir.Date` |
 
 ## Further Considerations
 

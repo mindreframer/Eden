@@ -10,7 +10,7 @@ defmodule Eden do
   alias Eden.Decode
   alias Eden.Exception, as: Ex
 
-  @default_handlers %{"inst" => &Eden.Tag.inst/1, "uuid" => &Eden.Tag.uuid/1}
+  @default_handlers %{"inst" => &Eden.Tag.inst/1, "uuid" => &Eden.Tag.uuid/1, "date" => &Eden.Tag.date/1}
 
   @doc """
   Encodes an *Elixir* term that implements the `Eden.Encode` protocol.
