@@ -20,7 +20,7 @@ defmodule Eden.Mixfile do
 
   defp deps do
     [
-      {:array, github: "jfacorro/elixir-array", tag: "2.0.0"},
+      {:array, github: "blogscot/elixir-array"},
       {:ex_doc, "~> 0.7", only: :dev},
       {:earmark, ">= 0.0.0", only: :dev}
     ]
