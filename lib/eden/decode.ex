@@ -43,12 +43,12 @@ defmodule Eden.Decode do
   end
 
   def decode(%Node{type: :integer, value: value}, _opts) do
-    value = String.rstrip(value, ?N)
+    value = String.trim_trailing(value, "N")
     :erlang.binary_to_integer(value)
   end
 
   def decode(%Node{type: :float, value: value}, _opts) do
-    value = String.rstrip(value, ?M)
+    value = String.trim_trailing(value, "M")
     # Elixir/Erlang don't convert to float if there
     # is no decimal part.
     final_value =
