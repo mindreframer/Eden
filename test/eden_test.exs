@@ -63,7 +63,7 @@ defmodule EdenTest do
   end
 
   test "Decode Set" do
-    set = Enum.into([:name, "John", :age, 42], HashSet.new())
+    set = Enum.into([:name, "John", :age, 42], MapSet.new())
     assert decode!("#\{:name \"John\" :age 42}") == set
   end
 
@@ -120,8 +120,8 @@ defmodule EdenTest do
   end
 
   test "Encode Set" do
-    set = Enum.into([:name, "John", :age, 42], HashSet.new())
-    assert encode!(set) == "#\{:name, :age, \"John\", 42}"
+    set = Enum.into([:name, "John", :age, 42], MapSet.new())
+    assert encode!(set) == "\#{42, :age, :name, \"John\"}"
   end
 
   test "Encode Tag" do
