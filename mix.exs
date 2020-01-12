@@ -6,11 +6,11 @@ defmodule Eden.Mixfile do
       app: :eden,
       version: "2.0.0",
       elixir: "~> 1.5",
-      description: description,
-      package: package,
+      description: description(),
+      package: package(),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
-      deps: deps
+      deps: deps()
     ]
   end
 
