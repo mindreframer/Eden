@@ -70,7 +70,7 @@ iex> Eden.decode("nil true false .")
 | `vector`  | `Array`  |
 | `map`  | `Map` |
 | `set`  | `HashSet` |
-| `#inst`  | `Timex.DateTime` |
+| `#inst`  | `Elixir.DateTime` |
 | `#uuid`  | `Eden.UUID` |
 
 ## Further Considerations

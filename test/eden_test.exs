@@ -68,7 +68,7 @@ defmodule EdenTest do
   end
 
   test "Decode Tag" do
-    date = Timex.parse!("1985-04-12T23:20:50.52Z", "{RFC3339z}")
+    date = parse_datetime("1985-04-12T23:20:50.52Z")
     assert decode!("#inst \"1985-04-12T23:20:50.52Z\"") == date
 
     assert decode!("#uuid \"f81d4fae-7dec-11d0-a765-00a0c91e6bf6\"") == %UUID{
@@ -125,7 +125,7 @@ defmodule EdenTest do
   end
 
   test "Encode Tag" do
-    date = Timex.parse!("1985-04-12T23:20:50.52Z", "{RFC3339z}")
+    date = parse_datetime("1985-04-12T23:20:50.52Z")
     assert encode!(date) == "#inst \"1985-04-12T23:20:50.52Z\""
     uuid = UUID.new("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
     assert encode!(uuid) == "#uuid \"f81d4fae-7dec-11d0-a765-00a0c91e6bf6\""
@@ -160,5 +160,10 @@ defmodule EdenTest do
   defp custom_tag_handler(value) when is_list(value) do
     mapping = %{1 => :a, 2 => :b, 3 => :c}
     Enum.map(value, fn x -> mapping[x] end)
+  end
+
+  defp parse_datetime(datetime) do
+    {:ok, datetime, _} = DateTime.from_iso8601(datetime)
+    datetime
   end
 end

@@ -41,7 +41,7 @@ defmodule Eden do
   types also have an implementation for `Eden.Encode`:
 
   - `Eden.UUID` (`#uuid`)
-  - `Timex.DatetTime` (`#inst`)
+  - `Elixir.DateTime` (`#inst`)
 
   ## Examples
 

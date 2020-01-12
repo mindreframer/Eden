@@ -111,7 +111,7 @@ end
 
 defimpl Encode, for: DateTime do
   def encode(datetime) do
-    value = Timex.format!(datetime, "{RFC3339z}")
+    value = DateTime.to_string(datetime) |> String.replace(" ", "T")
     Encode.encode(Tag.new("inst", value))
   end
 end
