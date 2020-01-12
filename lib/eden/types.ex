@@ -22,7 +22,8 @@ defmodule Eden.Tag do
   def new(name, value), do: %Eden.Tag{name: name, value: value}
 
   def inst(datetime) do
-    Timex.parse!(datetime, "{RFC3339z}")
+    {:ok, datetime, _} = DateTime.from_iso8601(datetime)
+    datetime
   end
 
   def uuid(value), do: %Eden.UUID{value: value}
