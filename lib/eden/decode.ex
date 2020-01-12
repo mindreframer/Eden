@@ -82,7 +82,7 @@ defmodule Eden.Decode do
 
     children
     |> decode(opts)
-    |> Enum.chunk(2)
+    |> Enum.chunk_every(2)
     |> Enum.map(fn [a, b] -> {a, b} end)
     |> Enum.into(%{})
   end
