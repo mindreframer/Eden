@@ -142,18 +142,18 @@ defmodule EdenTest do
 
   test "Encode Unknown Type" do
     e = %Protocol.UndefinedError{}
-    assert encode(self) == {:error, e.__struct__}
+    assert encode(self()) == {:error, e.__struct__}
 
     assert_raise Protocol.UndefinedError, fn ->
-      encode!(self)
+      encode!(self())
     end
 
     try do
-      encode!(self)
+      encode!(self())
     rescue
       e in Protocol.UndefinedError ->
         assert e.protocol == Eden.Encode
-        assert e.value == self
+        assert e.value == self()
     end
   end
 
