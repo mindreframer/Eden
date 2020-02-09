@@ -121,6 +121,7 @@ defmodule Eden.Formatter do
 
   defp parse_opts([{option, value} | opts], indent, line, record, colon) do
     value = IO.iodata_to_binary(value)
+
     case option do
       :indent -> parse_opts(opts, value, line, record, colon)
       :record_separator -> parse_opts(opts, indent, line, value, colon)
@@ -161,11 +162,29 @@ defmodule Eden.Formatter do
     cont.(tail, output_acc)
   end
 
-  defp pp_byte(byte, rest, output, depth, empty, opts) when byte in ' \n\r\t' do
+  defp pp_byte(byte, rest, output, depth, empty, opts) when byte in ' ' do
+    [_ | last] = output
+    # [44, "\n", _]
+    # we have a comma there, skip the space!
+    cond do
+      # TODO refactor later
+      is_list(last) && length(last) == 1 && is_list(List.first(last)) &&
+          last |> List.first() |> List.first() == 44 ->
+        pp_iodata(rest, output, depth, empty, opts)
+
+      is_list(last) && List.first(last) == 44 ->
+        pp_iodata(rest, output, depth, empty, opts)
+
+      true ->
+        pp_iodata(rest, [output, byte], depth, empty, opts)
+    end
+  end
+
+  defp pp_byte(byte, rest, output, depth, empty, opts) when byte in '\n\r\t' do
     pp_iodata(rest, output, depth, empty, opts)
   end
 
-  defp pp_byte(byte, rest, output, depth, empty, opts) when byte in '{[' do
+  defp pp_byte(byte, rest, output, depth, empty, opts) when byte in '{[(' do
     {out, depth} =
       cond do
         depth == :first -> {byte, 1}
@@ -178,13 +197,13 @@ defmodule Eden.Formatter do
     pp_iodata(rest, [output, out], depth, empty, opts)
   end
 
-  defp pp_byte(byte, rest, output, depth, true = _empty, opts) when byte in '}]' do
+  defp pp_byte(byte, rest, output, depth, true = _empty, opts) when byte in '}])' do
     empty = false
     depth = depth - 1
     pp_iodata(rest, [output, byte], depth, empty, opts)
   end
 
-  defp pp_byte(byte, rest, output, depth, false = empty, opts) when byte in '}]' do
+  defp pp_byte(byte, rest, output, depth, false = empty, opts) when byte in '}])' do
     depth = depth - 1
     out = [opts(opts, :line), tab(opts(opts, :indent), depth), byte]
     pp_iodata(rest, [output, out], depth, empty, opts)
@@ -193,11 +212,6 @@ defmodule Eden.Formatter do
   defp pp_byte(byte, rest, output, depth, _empty, opts) when byte in ',' do
     empty = false
     out = [byte, opts(opts, :line), tab(opts(opts, :indent), depth)]
-    pp_iodata(rest, [output, out], depth, empty, opts)
-  end
-
-  defp pp_byte(byte, rest, output, depth, empty, opts) when byte in ':' do
-    out = [byte, opts(opts, :colon)]
     pp_iodata(rest, [output, out], depth, empty, opts)
   end
 
@@ -222,15 +236,19 @@ defmodule Eden.Formatter do
   end
 
   defp pp_string(binary, output_acc, false = _in_bs, cont) when is_binary(binary) do
-    IO.inspect(:binary.match(binary, ["\"", "\\"]), label: :pp_string_binary_match)
     case :binary.match(binary, ["\"", "\\"]) do
       :nomatch ->
         {[output_acc | binary], &pp_string(&1, &2, false, cont)}
+
       {pos, 1} ->
         {head, tail} = :erlang.split_binary(binary, pos + 1)
+
         case :binary.at(binary, pos) do
-          ?\\ -> pp_string(tail, [output_acc | head], true, cont)
-          ?" -> cont.(tail, [output_acc | head])
+          ?\\ ->
+            pp_string(tail, [output_acc | head], true, cont)
+
+          ?" ->
+            cont.(tail, [output_acc | head])
         end
     end
   end
