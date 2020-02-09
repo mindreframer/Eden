@@ -96,7 +96,8 @@ defmodule Eden.Decode do
   def decode(%Node{type: :tag, value: name, children: [child]}, opts) do
     case Map.get(opts[:handlers], name) do
       nil ->
-        %Tag{name: name, value: decode(child, opts)}
+        tag = %Tag{name: name, value: decode(child, opts)}
+        if opts[:preserve_structs], do: to_struct(tag), else: tag
 
       handler ->
         handler.(decode(child, opts))
@@ -105,5 +106,14 @@ defmodule Eden.Decode do
 
   def decode(%Node{type: type}, _opts) do
     raise "Unrecognized node type: #{inspect(type)}"
+  end
+
+  defp to_struct(tag = %Tag{name: name, value: value}) do
+    module = String.to_existing_atom(name)
+
+    case Code.ensure_compiled(module) do
+      {:module, _} -> struct(module, value)
+      _ -> tag
+    end
   end
 end

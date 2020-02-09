@@ -10,7 +10,11 @@ defmodule Eden do
   alias Eden.Decode
   alias Eden.Exception, as: Ex
 
-  @default_handlers %{"inst" => &Eden.Tag.inst/1, "uuid" => &Eden.Tag.uuid/1, "date" => &Eden.Tag.date/1}
+  @default_handlers %{
+    "inst" => &Eden.Tag.inst/1,
+    "uuid" => &Eden.Tag.uuid/1,
+    "date" => &Eden.Tag.date/1
+  }
 
   @doc """
   Encodes an *Elixir* term that implements the `Eden.Encode` protocol.
@@ -55,9 +59,9 @@ defmodule Eden do
       {:error, Protocol.UndefinedError}
   """
   @spec encode(Encode.t()) :: {:ok, String.t()} | {:error, atom}
-  def encode(data) do
+  def encode(data, opts \\ []) do
     try do
-      {:ok, encode!(data)}
+      {:ok, encode!(data, opts)}
     rescue
       e -> {:error, e.__struct__}
     end
@@ -70,8 +74,8 @@ defmodule Eden do
   Returns the function result otherwise.
   """
   @spec encode!(Encode.t()) :: String.t()
-  def encode!(data) do
-    Encode.encode(data)
+  def encode!(data, opts \\ []) do
+    Encode.encode(data, opts)
   end
 
   @doc """
@@ -120,7 +124,7 @@ defmodule Eden do
   def decode!(input, opts \\ []) do
     tree = parse(input, location: true)
     handlers = Map.merge(@default_handlers, opts[:handlers] || %{})
-    opts = [handlers: handlers]
+    opts = opts |> Keyword.put(:handlers, handlers)
 
     case Decode.decode(tree, opts) do
       [] -> raise Ex.EmptyInputError, input
