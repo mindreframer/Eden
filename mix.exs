@@ -15,14 +15,19 @@ defmodule Eden.Mixfile do
   end
 
   def application do
-    [applications: [:array]]
+    if Mix.env() != :prod do
+      [applications: [:array, :cortex]]
+    else
+      [applications: [:array]]
+    end
   end
 
   defp deps do
     [
       {:array, github: "blogscot/elixir-array"},
       {:ex_doc, "~> 0.7", only: :dev},
-      {:earmark, ">= 0.0.0", only: :dev}
+      {:earmark, ">= 0.0.0", only: :dev},
+      {:cortex, "~> 0.5", only: [:dev, :test]}
     ]
   end
 

@@ -100,7 +100,9 @@ defmodule EdenTest do
     end
 
     test "struct - with preserve_structs: false" do
-      res = StructDec2.new() |> encode!(preserve_structs: false) |> decode!(preserve_structs: false)
+      res =
+        StructDec2.new() |> encode!(preserve_structs: false) |> decode!(preserve_structs: false)
+
       assert res == %{nested: [%{a: "1", b: 0}, %{a: "2", b: 0}]}
     end
   end
