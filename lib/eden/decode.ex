@@ -109,7 +109,7 @@ defmodule Eden.Decode do
   end
 
   defp to_struct(tag = %Tag{name: name, value: value}) do
-    module = String.to_atom(name)
+    module = String.to_existing_atom(name)
 
     case Code.ensure_compiled(module) do
       {:module, _} -> struct(module, value)
