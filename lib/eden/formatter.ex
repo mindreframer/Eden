@@ -1,3 +1,6 @@
+# Adjusted copy from https://github.com/michalmuskala/jason/blob/master/lib/formatter.ex
+# TODO: cleanup comments / unused functions, options, etc...
+
 defmodule Eden.Formatter do
   @moduledoc ~S"""
   Pretty-printing and minimizing functions for EDN-encoded data.
