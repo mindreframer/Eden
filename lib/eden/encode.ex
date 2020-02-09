@@ -97,8 +97,8 @@ defimpl Encode, for: MapSet do
 end
 
 defimpl Encode, for: Tag do
-  def encode(tag, _opts) do
-    value = Encode.encode(tag.value)
+  def encode(tag, opts) do
+    value = Encode.encode(tag.value, opts)
     "##{tag.name} #{value}"
   end
 end
@@ -137,7 +137,7 @@ defimpl Encode, for: Any do
   end
 
   defp to_tag_struct(struct, opts) do
-    Eden.Tag.new(struct.__struct__, Encode.encode(Map.from_struct(struct), opts))
+    Eden.Tag.new(struct.__struct__, Map.from_struct(struct))
   end
 
   defp to_plain_map(struct) do
