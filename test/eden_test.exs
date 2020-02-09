@@ -139,6 +139,27 @@ defmodule EdenTest do
       assert encode!(some_tag) == "#custom/tag :joni"
     end
 
+    defmodule Struct1 do
+      defstruct a: "", b: 0
+    end
+
+    defmodule Struct2 do
+      defstruct nested: []
+
+      def new() do
+        %Struct2{nested: [%Struct1{a: "1"}, %Struct1{a: "2"}]}
+      end
+    end
+
+    test "struct" do
+      preserved =
+        "#Elixir.EdenTest.Struct2 \"{:nested (#Elixir.EdenTest.Struct1 \"{:a \"1\", :b 0}\", #Elixir.EdenTest.Struct1 \"{:a \"2\", :b 0}\")}\""
+
+      plain = "{:nested ({:a \"1\", :b 0}, {:a \"2\", :b 0})}"
+      assert encode!(Struct2.new(), preserve_structs: true) == preserved
+      assert encode!(Struct2.new(), preserve_structs: false) == plain
+    end
+
     test "fallback to Any" do
       node = %Eden.Parser.Node{}
       map = Map.from_struct(node)

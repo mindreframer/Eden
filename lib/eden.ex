@@ -59,9 +59,9 @@ defmodule Eden do
       {:error, Protocol.UndefinedError}
   """
   @spec encode(Encode.t()) :: {:ok, String.t()} | {:error, atom}
-  def encode(data) do
+  def encode(data, opts \\ []) do
     try do
-      {:ok, encode!(data)}
+      {:ok, encode!(data, opts)}
     rescue
       e -> {:error, e.__struct__}
     end
@@ -74,8 +74,8 @@ defmodule Eden do
   Returns the function result otherwise.
   """
   @spec encode!(Encode.t()) :: String.t()
-  def encode!(data) do
-    Encode.encode(data)
+  def encode!(data, opts \\ []) do
+    Encode.encode(data, opts)
   end
 
   @doc """
