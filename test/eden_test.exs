@@ -153,7 +153,7 @@ defmodule EdenTest do
 
     test "struct" do
       preserved =
-        "#Elixir.EdenTest.Struct2 \"{:nested (#Elixir.EdenTest.Struct1 \"{:a \"1\", :b 0}\", #Elixir.EdenTest.Struct1 \"{:a \"2\", :b 0}\")}\""
+        "#Elixir.EdenTest.Struct2 {:nested (#Elixir.EdenTest.Struct1 {:a \"1\", :b 0}, #Elixir.EdenTest.Struct1 {:a \"2\", :b 0})}"
 
       plain = "{:nested ({:a \"1\", :b 0}, {:a \"2\", :b 0})}"
       assert encode!(Struct2.new(), preserve_structs: true) == preserved

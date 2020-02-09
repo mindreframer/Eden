@@ -88,9 +88,9 @@ defimpl Encode, for: Map do
 end
 
 defimpl Encode, for: MapSet do
-  def encode(set, _opts) do
+  def encode(set, opts) do
     set
-    |> Enum.map(&Encode.encode/1)
+    |> Enum.map(fn(x)-> Encode.encode(x, opts) end)
     |> Enum.join(", ")
     |> Utils.wrap("#\{", "}")
   end
@@ -129,7 +129,7 @@ defimpl Encode, for: Any do
       true -> to_tag_struct(struct, opts)
       _ -> to_plain_map(struct)
     end
-    |> Encode.encode()
+    |> Encode.encode(opts)
   end
 
   def encode(value, _opts) do
