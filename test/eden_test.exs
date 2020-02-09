@@ -81,6 +81,28 @@ defmodule EdenTest do
       handlers = %{"custom/tag" => &custom_tag_handler/1}
       assert decode!("#custom/tag (1 2 3)", handlers: handlers) == [:a, :b, :c]
     end
+
+    defmodule StructDec1 do
+      defstruct a: "", b: 0
+    end
+
+    defmodule StructDec2 do
+      defstruct nested: []
+
+      def new() do
+        %StructDec2{nested: [%StructDec1{a: "1"}, %StructDec1{a: "2"}]}
+      end
+    end
+
+    test "struct - with preserve_structs: true" do
+      res = StructDec2.new() |> encode!(preserve_structs: true) |> decode!(preserve_structs: true)
+      assert res == StructDec2.new()
+    end
+
+    test "struct - with preserve_structs: false" do
+      res = StructDec2.new() |> encode!(preserve_structs: false) |> decode!(preserve_structs: false)
+      assert res == %{nested: [%{a: "1", b: 0}, %{a: "2", b: 0}]}
+    end
   end
 
   describe "encode" do

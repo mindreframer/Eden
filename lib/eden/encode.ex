@@ -90,7 +90,7 @@ end
 defimpl Encode, for: MapSet do
   def encode(set, opts) do
     set
-    |> Enum.map(fn(x)-> Encode.encode(x, opts) end)
+    |> Enum.map(fn x -> Encode.encode(x, opts) end)
     |> Enum.join(", ")
     |> Utils.wrap("#\{", "}")
   end
@@ -126,7 +126,7 @@ end
 defimpl Encode, for: Any do
   def encode(struct, opts) when is_map(struct) do
     case opts[:preserve_structs] do
-      true -> to_tag_struct(struct, opts)
+      true -> to_tag_struct(struct)
       _ -> to_plain_map(struct)
     end
     |> Encode.encode(opts)
@@ -136,7 +136,7 @@ defimpl Encode, for: Any do
     raise %Protocol.UndefinedError{protocol: Encode, value: value}
   end
 
-  defp to_tag_struct(struct, opts) do
+  defp to_tag_struct(struct) do
     Eden.Tag.new(struct.__struct__, Map.from_struct(struct))
   end
 

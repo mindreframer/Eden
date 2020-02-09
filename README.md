@@ -37,6 +37,13 @@ iex> Eden.encode(%{a: 1, b: 2, c: 3})
 iex> Eden.encode({:a, 1})
 {:error, Protocol.UndefinedError}
 
+# can work transparently with Elixir structs (without tuple-values)
+iex> defmodule User, do: defstruct name: nil, age: nil
+
+iex> %User{age: 20, name: "Name"} |> Eden.encode!(preserve_structs: true) |> IO.inspect() |> Eden.decode!(preserve_structs: true)
+"#Elixir.User {:age 20, :name \"Name\"}"
+%User{age: 20, name: "Name"}
+
 iex> Eden.decode("{:a 1 :b 2}")
 {:ok, %{a: 1, b: 2}}
 
@@ -93,6 +100,10 @@ On one hand the decision to translate **edn** `keyword`s as Elixir `atom`s comes
 ### `vector`
 
 There is no constant lookup or nearly constant indexed data structure like **edn**'s `vector` other than the `:array` data structure implemented in one of Erlang's standard library modules. Until there is a better implementation for this `Eden` will use [`Array`](https://github.com/takscape/elixir-array), an Elixir wrapper library for Erlang's array.
+
+### Elixir structs
+
+To enable transparent encoding / decoding for your Elixir structs, pass the option: `preserve_structs: true` to both `Eden.encode` / `Eden.decode` functions.
 
 ## **edn** grammar
 
