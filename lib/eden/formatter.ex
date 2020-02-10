@@ -35,18 +35,6 @@ defmodule Eden.Formatter do
       (default is the value for `:line_separator` option);
     * `:after_colon` - printed after a colon inside objects (default: one space - `" "`).
 
-  ## Examples
-
-      iex> Eden.Formatter.pretty_print(~s|{"a":{"b": [1, 2]}}|)
-      ~s|{
-        "a": {
-          "b": [
-            1,
-            2
-          ]
-        }
-      }|
-
   """
   @spec pretty_print(iodata, opts) :: binary
   def pretty_print(input, opts \\ []) do
@@ -56,10 +44,10 @@ defmodule Eden.Formatter do
   end
 
   @doc ~S"""
-  Pretty-prints JSON-encoded `input` and returns iodata.
+  Pretty-prints EDN-encoded `input` and returns iodata.
 
   This function should be preferred to `pretty_print/2`, if the pretty-printed
-  JSON will be handed over to one of the IO functions or sent
+  EDN will be handed over to one of the IO functions or sent
   over the socket. The Erlang runtime is able to leverage vectorised
   writes and avoid allocating a continuous buffer for the whole
   resulting string, lowering memory use and increasing performance.
@@ -77,20 +65,15 @@ defmodule Eden.Formatter do
   end
 
   @doc ~S"""
-  Minimizes JSON-encoded `input`.
+  Minimizes EDN-encoded `input`.
 
-  `input` may contain multiple JSON objects or arrays, optionally
+  `input` may contain multiple EDN objects or arrays, optionally
   separated by whitespace (e.g., one object per line). Minimized
   output will contain one object per line. No trailing newline is emitted.
 
   ## Options
 
     * `:record_separator` - controls the string used as newline (default: `"\n"`).
-
-  ## Examples
-
-      iex> Jason.Formatter.minimize(~s|{ "a" : "b" , "c": \n\n 2}|)
-      ~s|{"a":"b","c":2}|
 
   """
   @spec minimize(iodata, opts) :: binary
@@ -101,10 +84,10 @@ defmodule Eden.Formatter do
   end
 
   @doc ~S"""
-  Minimizes JSON-encoded `input` and returns iodata.
+  Minimizes EDN-encoded `input` and returns iodata.
 
   This function should be preferred to `minimize/2`, if the minimized
-  JSON will be handed over to one of the IO functions or sent
+  EDN will be handed over to one of the IO functions or sent
   over the socket. The Erlang runtime is able to leverage vectorised
   writes and avoid allocating a continuous buffer for the whole
   resulting string, lowering memory use and increasing performance.
